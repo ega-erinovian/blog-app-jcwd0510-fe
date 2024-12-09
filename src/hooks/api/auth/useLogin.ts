@@ -1,8 +1,11 @@
 "use client";
 
 import { axiosInstance } from "@/lib/axios";
+import { useAppDispatch } from "@/redux/hooks";
+import { loginAction } from "@/redux/slices/userSlice";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 // Use React Query
@@ -12,13 +15,23 @@ interface LoginPayload {
 }
 
 const useLogin = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
   return useMutation({
     mutationFn: async (payload: LoginPayload) => {
       const { data } = await axiosInstance.post("/auth/login", payload);
       return data;
     },
-    onSuccess: () => {
-      toast.success("Login Success");
+    onSuccess: (data) => {
+      toast.success("Welcome Back, " + data.name);
+
+      // Memasukkan data ke global state (redux)
+      dispatch(loginAction(data));
+
+      // Memasukkan data ke local storage
+      localStorage.setItem("blog-storage", JSON.stringify(data));
+      router.replace("/");
     },
     onError: (error: AxiosError<any>) => {
       toast.error(error.response?.data);
