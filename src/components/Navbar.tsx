@@ -27,7 +27,7 @@ const Navbar = () => {
             <Link href="/">Home</Link>
             <Link href="/profile">Profile</Link>
 
-            {!user.id && <Link href={"/login"}>Sing In</Link>}
+            {!user.id && <Link href={"/login"}>Sign In</Link>}
             {!!user.id && (
               <p className="cursor-pointer" onClick={logout}>
                 Logout
