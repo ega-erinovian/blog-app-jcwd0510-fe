@@ -1,9 +1,11 @@
 "use client";
 
-import { useAppSelector } from "@/redux/hooks";
+import HomePage from "@/features/home";
 
 export default function Home() {
-  const user = useAppSelector((state) => state.user);
-
-  return <h1 className="capitalize">Welcome back, {user.name}</h1>;
+  return (
+    <div className="countainer mx-auto">
+      <HomePage />
+    </div>
+  );
 }
