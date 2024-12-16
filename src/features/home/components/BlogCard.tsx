@@ -11,7 +11,7 @@ interface BlogCardProps {
 
 const BlogCard: FC<BlogCardProps> = ({ blog }) => {
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <div className="relative h-[420px] w-full overflow-hidden rounded-lg">
           <Image
