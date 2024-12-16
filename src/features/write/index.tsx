@@ -1,5 +1,6 @@
 "use client";
 
+import AuthGuard from "@/components/hoc/AuthGuard";
 import RichTextEditor from "@/components/RichTextEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -141,4 +142,4 @@ const WritePage = () => {
   );
 };
 
-export default WritePage;
+export default AuthGuard(WritePage);

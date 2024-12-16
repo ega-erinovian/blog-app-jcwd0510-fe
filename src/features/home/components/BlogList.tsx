@@ -4,6 +4,7 @@ import useGetBlogs from "@/hooks/api/blog/useGetBlogs";
 import BlogCard from "./BlogCard";
 import { useState } from "react";
 import PaginationSection from "@/components/PaginationSection";
+import Link from "next/link";
 
 const BlogList = () => {
   const [page, setPage] = useState<number>(1);
@@ -25,7 +26,9 @@ const BlogList = () => {
     <>
       <div className="grid grid-cols-3 gap-4 py-16">
         {data.data.map((blog, idx) => (
-          <BlogCard key={idx} blog={blog} />
+          <Link href={`/blogs/${blog.id}`} key={idx}>
+            <BlogCard blog={blog} />
+          </Link>
         ))}
       </div>
       <PaginationSection
