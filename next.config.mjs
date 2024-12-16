@@ -18,6 +18,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "akcdn.detik.net.id",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
     ],
   },
 };
