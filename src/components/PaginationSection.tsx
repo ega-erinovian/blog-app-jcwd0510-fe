@@ -37,15 +37,23 @@ const PaginationSection: FC<PaginationSectionProps> = ({
     <Pagination className="my-12">
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious onClick={handlePrev} />
+          <PaginationPrevious
+            onClick={handlePrev}
+            className="hover:cursor-pointer"
+          />
         </PaginationItem>
 
         <PaginationItem>
-          <PaginationLink>{page}</PaginationLink>
+          <PaginationLink className="hover:bg-transparent">
+            {page}
+          </PaginationLink>
         </PaginationItem>
 
         <PaginationItem>
-          <PaginationNext onClick={handleNext} />
+          <PaginationNext
+            onClick={handleNext}
+            className="hover:cursor-pointer"
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>
