@@ -8,35 +8,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { logoutAction } from "@/redux/slices/userSlice";
 import { Menu } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-  const dispatch = useAppDispatch();
   const router = useRouter();
-  const user = useAppSelector((state) => state.user);
+
+  const { data } = useSession(); // dari next-auth
+
+  const user = data?.user;
 
   const logout = () => {
-    localStorage.removeItem("blog-storage");
-    dispatch(logoutAction());
+    // Logout pakai next-auth
+    signOut();
   };
 
   return (
-    <nav>
+    <nav className="sticky top-0 bg-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
           <Link href="/" className="text-xl font-bold">
-            Blog<span className="text-green-500">Go</span>
+            Blog<span className="text-emerald-400">Go</span>
           </Link>
 
           <div className="hidden cursor-pointer items-center gap-8 font-medium md:flex">
             <Link href="/">Home</Link>
             <Link href="/">Profile</Link>
-            {!user.id && <Link href="/login">Sign in</Link>}
-            {!!user.id && (
+            {!user?.id && <Link href="/login">Sign in</Link>}
+            {!!user?.id && (
               <>
                 <p onClick={() => router.push("/write")}>Write</p>
                 <p onClick={logout}>Logout</p>
@@ -59,12 +60,12 @@ const Navbar = () => {
                   <Link href="/">Profile</Link>
                 </DropdownMenuItem>
 
-                {!user.id && (
+                {!user?.id && (
                   <DropdownMenuItem>
                     <Link href="/login">Sign in</Link>
                   </DropdownMenuItem>
                 )}
-                {!!user.id && (
+                {!!user?.id && (
                   <>
                     <DropdownMenuItem>
                       <>

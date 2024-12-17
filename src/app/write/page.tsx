@@ -1,7 +1,8 @@
+import AuthGuard from "@/components/hoc/AuthGuard";
 import WritePage from "@/features/write";
 
-const Write = () => {
+const Write = async () => {
   return <WritePage />;
 };
 
-export default Write;
+export default AuthGuard(Write); // AuthGurad to protecting route
