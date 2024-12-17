@@ -20,14 +20,6 @@ const BlogList = () => {
     setPage(page);
   };
 
-  if (isPending) {
-    return <h1 className="text-center font-bold">Loading...</h1>;
-  }
-
-  if (!data) {
-    return <h1 className="text-center font-bold">No Data</h1>;
-  }
-
   return (
     <>
       <Input
