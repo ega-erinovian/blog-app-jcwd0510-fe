@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import useRegister from "@/hooks/api/auth/useRegister";
 import { useFormik } from "formik";
 import { RegisterSchema } from "./schemas";
+import Link from "next/link";
 
 const RegisterPage = () => {
   const { mutateAsync: register, isPending } = useRegister();
@@ -79,6 +80,15 @@ const RegisterPage = () => {
               <Button type="submit" className="mt-4" disabled={isPending}>
                 {isPending ? "Loading..." : "Submit"}
               </Button>
+              <p className="text-center text-xs">
+                Already Have An Account?{" "}
+                <Link
+                  href="/login"
+                  className="font-semibold hover:text-emerald-500"
+                >
+                  Sign In
+                </Link>
+              </p>
             </div>
           </form>
         </CardContent>
