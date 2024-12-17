@@ -1,18 +1,16 @@
 "use client";
 
+import Markdown from "@/components/Markdown";
 import { Badge } from "@/components/ui/badge";
+import useDeleteBlog from "@/hooks/api/blog/useDeleteBlog";
 import useGetBlog from "@/hooks/api/blog/useGetBlog";
+import { useAppSelector } from "@/redux/hooks";
 import { format } from "date-fns";
 import Image from "next/image";
-import { FC } from "react";
-import SkeletonBlog from "./components/SkeletonBlog";
-import Markdown from "@/components/Markdown";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, Trash2 } from "lucide-react";
-import ModalDelete from "./components/ModalDelete";
-import useDeleteBlog from "@/hooks/api/blog/useDeleteBlog";
-import { useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
+import { FC } from "react";
+import ModalDelete from "./components/ModalDelete";
+import SkeletonBlog from "./components/SkeletonBlog";
 
 interface BlogDetailPageProps {
   blogId: number;
@@ -51,7 +49,12 @@ const BlogDetailPage: FC<BlogDetailPageProps> = ({ blogId }) => {
           <p className="capitalize">
             {format(new Date(data.createdAt), "dd MMM yyyy")} - {data.user.name}
           </p>
-          {id === data.userId && <ModalDelete onClick={onClickDeleteBlog} />}
+          {id === data.userId && (
+            <ModalDelete
+              onClick={onClickDeleteBlog}
+              isPending={isPendingDelete}
+            />
+          )}
         </div>
         <div className="relative h-[400px]">
           <Image
