@@ -11,6 +11,7 @@ import Link from "next/link";
 import { FC } from "react";
 import ModalDelete from "./components/ModalDelete";
 import SkeletonBlog from "./components/SkeletonBlog";
+import { useSession } from "next-auth/react";
 
 interface BlogDetailPageProps {
   blogId: number;
@@ -18,11 +19,10 @@ interface BlogDetailPageProps {
 
 const BlogDetailPage: FC<BlogDetailPageProps> = ({ blogId }) => {
   const { data, isPending: isPendingGet } = useGetBlog(blogId);
+  const session = useSession();
 
   const { mutateAsync: deleteBlog, isPending: isPendingDelete } =
     useDeleteBlog();
-
-  const { id } = useAppSelector((state) => state.user);
 
   const onClickDeleteBlog = async () => {
     await deleteBlog(blogId);
@@ -49,7 +49,7 @@ const BlogDetailPage: FC<BlogDetailPageProps> = ({ blogId }) => {
           <p className="capitalize">
             {format(new Date(data.createdAt), "dd MMM yyyy")} - {data.user.name}
           </p>
-          {id === data.userId && (
+          {Number(session.data?.user.id) === data.userId && (
             <ModalDelete
               onClick={onClickDeleteBlog}
               isPending={isPendingDelete}

@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { signIn } from "next-auth/react"; // Hanya bisa digunakan di client side comp
 
 // Use React Query
 interface LoginPayload {
@@ -16,21 +17,14 @@ interface LoginPayload {
 
 const useLogin = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-
   return useMutation({
     mutationFn: async (payload: LoginPayload) => {
       const { data } = await axiosInstance.post("/auth/login", payload);
       return data;
     },
-    onSuccess: (data) => {
-      toast.success("Welcome Back, " + data.name);
-
-      // Memasukkan data ke global state (redux)
-      dispatch(loginAction(data));
-
-      // Memasukkan data ke local storage
-      localStorage.setItem("blog-storage", JSON.stringify(data));
+    onSuccess: async (data) => {
+      toast.success("Welcome, " + data.name);
+      await signIn("credentials", { ...data, redirect: false });
       router.replace("/");
     },
     onError: (error: AxiosError<any>) => {

@@ -7,10 +7,11 @@ import PaginationSection from "@/components/PaginationSection";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { useDebounceValue } from "usehooks-ts";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 const BlogList = () => {
-  const [page, setPage] = useState<number>(1);
-  const [search, setSearch] = useState<string>("");
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   const [debouncedValue] = useDebounceValue(search, 500);
 
   const { data, isPending } = useGetBlogs({ page, search: debouncedValue });
@@ -32,7 +33,10 @@ const BlogList = () => {
       <Input
         className="mx-auto my-8 w-full"
         placeholder="Search..."
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e) => {
+          setPage(1);
+          setSearch(e.target.value);
+        }}
         value={search}
       />
 

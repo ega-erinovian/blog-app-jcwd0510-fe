@@ -142,4 +142,4 @@ const WritePage = () => {
   );
 };
 
-export default AuthGuard(WritePage);
+export default WritePage;
