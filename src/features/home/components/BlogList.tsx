@@ -32,18 +32,24 @@ const BlogList = () => {
         value={search}
       />
 
-      {isPending && <h1 className="text-center font-bold">Loading...</h1>}
+      {isPending && (
+        <div className="flex h-[30vh] items-center justify-center">
+          <h1 className="text-center">Loading...</h1>
+        </div>
+      )}
 
-      {!data?.data.length ? (
-        <h1 className="text-center font-bold">No Data</h1>
-      ) : (
+      {!data?.data.length && !isPending && (
+        <div className="flex h-[30vh] items-center justify-center">
+          <h1 className="text-center">No Data</h1>
+        </div>
+      )}
+
+      {!!data && !!data?.data.length && (
         <>
-          <div className="grid gap-4 py-16 md:grid-cols-3">
-            {data.data.map((blog, idx) => (
-              <Link href={`/blogs/${blog.id}`} key={idx}>
-                <BlogCard blog={blog} />
-              </Link>
-            ))}
+          <div className="grid gap-4 md:grid-cols-3">
+            {data.data.map((blog) => {
+              return <BlogCard key={blog.id} blog={blog} />;
+            })}
           </div>
           <PaginationSection
             onChangePage={onChangePage}
