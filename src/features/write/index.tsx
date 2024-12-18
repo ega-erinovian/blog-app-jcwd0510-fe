@@ -1,7 +1,6 @@
 "use client";
 
 import AuthGuard from "@/components/hoc/AuthGuard";
-import RichTextEditor from "@/components/RichTextEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +9,12 @@ import useCreateBlog from "@/hooks/api/blog/useCreateBlog";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
+import { CreateBlogSchema } from "./schema";
+import dynamic from "next/dynamic";
+
+const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), {
+  ssr: false,
+});
 
 const WritePage = () => {
   const { mutateAsync: createBlog, isPending } = useCreateBlog();
@@ -21,6 +26,7 @@ const WritePage = () => {
       content: "",
       thumbnail: null,
     },
+    validationSchema: CreateBlogSchema,
     onSubmit: async (values) => {
       await createBlog(values);
     },
@@ -99,7 +105,9 @@ const WritePage = () => {
           label="Content"
           value={formik.values.content}
           onChange={(value: string) => formik.setFieldValue("content", value)}
-          isError={!!formik.errors.content}
+          isTouch={formik.touched.content}
+          setError={formik.setFieldError}
+          setTouch={formik.setFieldTouched}
         />
 
         {selectedImage && (
@@ -130,6 +138,9 @@ const WritePage = () => {
             accept="image/*"
             onChange={onChangeThumbnail}
           />
+          {!!formik.touched.thumbnail && !!formik.errors.thumbnail ? (
+            <p className="text-xs text-red-500">{formik.errors.thumbnail}</p>
+          ) : null}
         </div>
 
         <div className="flex justify-end">

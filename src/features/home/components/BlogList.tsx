@@ -48,7 +48,11 @@ const BlogList = () => {
         <>
           <div className="grid gap-4 md:grid-cols-3">
             {data.data.map((blog) => {
-              return <BlogCard key={blog.id} blog={blog} />;
+              return (
+                <Link href={`/blogs/${blog.id}`} key={blog.id}>
+                  <BlogCard blog={blog} />
+                </Link>
+              );
             })}
           </div>
           <PaginationSection
