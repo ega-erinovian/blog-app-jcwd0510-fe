@@ -1,52 +1,45 @@
 "use client";
 
-import useGetBlogs from "@/hooks/api/blog/useGetBlogs";
-import BlogCard from "./BlogCard";
-import { useState } from "react";
 import PaginationSection from "@/components/PaginationSection";
+import useGetBlogs from "@/hooks/api/blog/useGetBlogs";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { useDebounceValue } from "usehooks-ts";
 import { parseAsInteger, useQueryState } from "nuqs";
+import { useDebounceValue } from "usehooks-ts";
+import BlogCard from "./BlogCard";
+import { SearchInput } from "./SearchInput";
+import { BlogCardSkeleton } from "@/components/skeleton/BlogCardSkeleton";
+import NoPosts from "@/components/NoPostsFound";
 
 const BlogList = () => {
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   const [debouncedValue] = useDebounceValue(search, 500);
 
-  const { data, isPending } = useGetBlogs({ page, search: debouncedValue });
+  const { data, isPending } = useGetBlogs({
+    page,
+    search: debouncedValue,
+    take: 12,
+  });
 
   const onChangePage = (page: number) => {
     setPage(page);
   };
 
+  const onSearch = (search: string) => {
+    setPage(1);
+    setSearch(search);
+  };
+
   return (
     <>
-      <Input
-        className="mx-auto my-8 w-full"
-        placeholder="Search..."
-        onChange={(e) => {
-          setPage(1);
-          setSearch(e.target.value);
-        }}
-        value={search}
-      />
+      <SearchInput onSearch={onSearch} />
+      {isPending && <BlogCardSkeleton />}
 
-      {isPending && (
-        <div className="flex h-[30vh] items-center justify-center">
-          <h1 className="text-center">Loading...</h1>
-        </div>
-      )}
-
-      {!data?.data.length && !isPending && (
-        <div className="flex h-[30vh] items-center justify-center">
-          <h1 className="text-center">No Data</h1>
-        </div>
-      )}
+      {!data?.data.length && !isPending && <NoPosts />}
 
       {!!data && !!data?.data.length && (
         <>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {data.data.map((blog) => {
               return (
                 <Link href={`/blogs/${blog.id}`} key={blog.id}>
@@ -55,14 +48,13 @@ const BlogList = () => {
               );
             })}
           </div>
-          <PaginationSection
-            onChangePage={onChangePage}
-            page={page}
-            take={data.meta.take}
-            total={data.meta.total}
-          />
         </>
       )}
+      <PaginationSection
+        onPageChange={onChangePage}
+        currentPage={page}
+        totalPages={data?.meta.total || 1}
+      />
     </>
   );
 };
