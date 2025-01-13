@@ -6,12 +6,14 @@ import useDeleteBlog from "@/hooks/api/blog/useDeleteBlog";
 import useGetBlog from "@/hooks/api/blog/useGetBlog";
 import { useAppSelector } from "@/redux/hooks";
 import { format } from "date-fns";
+import { ArrowLeft } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 import ModalDelete from "./components/ModalDelete";
-import SkeletonBlog from "./components/SkeletonBlog";
-import { useSession } from "next-auth/react";
+import { BlogDetailSkeleton } from "@/components/skeleton/BlogDetailSkeleton";
+import PostNotFound from "@/components/PostNotFound";
 
 interface BlogDetailPageProps {
   blogId: number;
@@ -28,35 +30,45 @@ const BlogDetailPage: FC<BlogDetailPageProps> = ({ blogId }) => {
     await deleteBlog(blogId);
   };
 
-  if (isPendingGet) return <SkeletonBlog />;
+  if (isPendingGet) return <BlogDetailSkeleton />;
 
   if (!data) {
-    return <h1 className="text-center font-bold">No Data</h1>;
+    return <PostNotFound />;
   }
 
   return (
-    <main className="container mx-auto my-28 max-w-6xl px-4">
-      <section className="space-y-4">
+    <main className="container mx-auto my-8 max-w-7xl px-4 md:my-12 md:px-16">
+      <article className="space-y-8">
         <Link
           href="/"
-          className="mb-8 flex max-w-fit items-center font-semibold underline underline-offset-2 hover:text-green-500"
+          className="inline-flex items-center text-sm font-medium text-gray-500 transition-colors hover:text-green-600"
         >
+          <ArrowLeft className="mr-2 h-4 w-4" />
           Go Back
         </Link>
-        <Badge>{data.category}</Badge>
-        <h1 className="text-3xl font-bold">{data.title}</h1>
-        <div className="flex items-center justify-between gap-2">
-          <p className="capitalize">
-            {format(new Date(data.createdAt), "dd MMM yyyy")} - {data.user.name}
-          </p>
-          {Number(session.data?.user.id) === data.userId && (
-            <ModalDelete
-              onClick={onClickDeleteBlog}
-              isPending={isPendingDelete}
-            />
-          )}
-        </div>
-        <div className="relative h-[400px]">
+
+        <header className="space-y-4">
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
+            {data.category}
+          </Badge>
+          <h1 className="text-3xl font-bold sm:text-4xl md:text-5xl">
+            {data.title}
+          </h1>
+          <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-gray-500">
+            <p className="capitalize">
+              {format(new Date(data.createdAt), "dd MMM yyyy")} -{" "}
+              {data.user.name}
+            </p>
+            {Number(session.data?.user.id) === data.userId && (
+              <ModalDelete
+                onClick={onClickDeleteBlog}
+                isPending={isPendingDelete}
+              />
+            )}
+          </div>
+        </header>
+
+        <div className="relative aspect-video w-full overflow-hidden rounded-lg shadow-lg">
           <Image
             src={data.thumbnail}
             alt={data.title}
@@ -64,8 +76,11 @@ const BlogDetailPage: FC<BlogDetailPageProps> = ({ blogId }) => {
             className="object-cover"
           />
         </div>
-      </section>
-      <Markdown content={data.content} />
+
+        <div className="prose dark:prose-invert max-w-none">
+          <Markdown content={data.content} />
+        </div>
+      </article>
     </main>
   );
 };

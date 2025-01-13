@@ -8,6 +8,7 @@ import { FC } from "react";
 import { ResetPasswordSchema } from "./schemas";
 import useResetPassword from "@/hooks/api/auth/useResetPassword";
 import { Button } from "@/components/ui/button";
+import { Lock, Loader2 } from "lucide-react";
 
 interface ResetPasswordPageProps {
   token: string;
@@ -27,54 +28,92 @@ const ResetPasswordPage: FC<ResetPasswordPageProps> = ({ token }) => {
   });
 
   return (
-    <main className="flex justify-center pt-20">
-      <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle>Reset Password</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={formik.handleSubmit}>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  name="password"
-                  type="password"
-                  placeholder="Min 8 - 12 Character"
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {!!formik.touched.password && !!formik.errors.password ? (
-                  <p className="text-xs text-red-500">
-                    {formik.errors.password}
-                  </p>
-                ) : null}
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  name="confirmPassword"
-                  placeholder="Min 8 - 12 Character"
-                  type="password"
-                  value={formik.values.confirmPassword}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {!!formik.touched.confirmPassword &&
-                !!formik.errors.confirmPassword ? (
-                  <p className="text-xs text-red-500">
-                    {formik.errors.confirmPassword}
-                  </p>
-                ) : null}
-              </div>
-              <Button type="submit" className="mt-2" disabled={isPending}>
-                {isPending ? "Loading..." : "Reset Password"}
-              </Button>
+    <main className="h-[calc(100vh-68px)] px-4">
+      <div className="flex h-full items-center justify-center">
+        <Card className="w-full max-w-md border-none shadow-lg sm:w-[450px]">
+          <CardHeader className="space-y-2 pb-2 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-900 text-white">
+              <Lock className="h-6 w-6" />
             </div>
-          </form>
-        </CardContent>
-      </Card>
+            <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
+            <p className="text-sm text-gray-500">
+              Please enter your new password
+            </p>
+          </CardHeader>
+
+          <CardContent className="pb-8 pt-6">
+            <form onSubmit={formik.handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="password"
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      name="password"
+                      type="password"
+                      placeholder="Min 8 - 12 Characters"
+                      className="focus-visible:ring-2"
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {!!formik.touched.password && !!formik.errors.password && (
+                      <p className="text-xs text-red-500">
+                        {formik.errors.password}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="confirmPassword"
+                    className="text-sm font-semibold text-gray-700"
+                  >
+                    Confirm Password
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      name="confirmPassword"
+                      type="password"
+                      placeholder="Min 8 - 12 Characters"
+                      className="focus-visible:ring-2"
+                      value={formik.values.confirmPassword}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {!!formik.touched.confirmPassword &&
+                      !!formik.errors.confirmPassword && (
+                        <p className="text-xs text-red-500">
+                          {formik.errors.confirmPassword}
+                        </p>
+                      )}
+                  </div>
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-gray-900 text-white transition-colors hover:bg-gray-800"
+                disabled={isPending}
+              >
+                {isPending ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Resetting...</span>
+                  </div>
+                ) : (
+                  "Reset Password"
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </main>
   );
 };
