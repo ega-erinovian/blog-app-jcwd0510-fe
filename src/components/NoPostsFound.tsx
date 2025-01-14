@@ -1,5 +1,5 @@
 import React from "react";
-import { BookOpen, PenLine } from "lucide-react";
+import { BookOpen, Link, PenLine } from "lucide-react";
 
 const NoPosts = () => {
   return (
@@ -23,10 +23,12 @@ const NoPosts = () => {
       </div>
 
       <div className="mt-8">
-        <div className="inline-flex items-center gap-2 rounded-full bg-gray-800 px-6 py-2 text-sm text-white transition-all hover:bg-gray-700">
-          <PenLine className="h-4 w-4" />
-          <span>Create Your First Post</span>
-        </div>
+        <Link href="/write">
+          <div className="inline-flex items-center gap-2 rounded-full bg-gray-800 px-6 py-2 text-sm text-white transition-all hover:bg-gray-700">
+            <PenLine className="h-4 w-4" />
+            <span>Create Your First Post</span>
+          </div>
+        </Link>
       </div>
     </div>
   );

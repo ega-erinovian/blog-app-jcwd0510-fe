@@ -63,7 +63,7 @@ const ModalDelete: FC<ModalDeleteProps> = ({ onClick, isPending }) => {
                 <span>Deleting...</span>
               </div>
             ) : (
-              "Delete Account"
+              "Delete Post"
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -14,17 +14,21 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 interface PaginationSectionProps {
   currentPage: number;
-  totalPages: number;
+  totalItems: number; // Total number of posts
+  itemsPerPage: number; // Number of posts per page
   onPageChange: (page: number) => void;
   className?: string;
 }
 
 const PaginationSection: React.FC<PaginationSectionProps> = ({
   currentPage,
-  totalPages,
+  totalItems,
+  itemsPerPage,
   onPageChange,
   className = "",
 }) => {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
   const pageNumbers = useMemo(() => {
     const pages = [];
     const maxVisiblePages = 5;
@@ -66,7 +70,9 @@ const PaginationSection: React.FC<PaginationSectionProps> = ({
         <PaginationItem>
           <PaginationPrevious
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-            className={`hover:cursor-pointer ${currentPage === 1 ? "pointer-events-none opacity-50" : ""}`}
+            className={`hover:cursor-pointer ${
+              currentPage === 1 ? "pointer-events-none opacity-50" : ""
+            }`}
             aria-disabled={currentPage === 1}
           >
             <ChevronLeft className="h-4 w-4" />
@@ -85,7 +91,11 @@ const PaginationSection: React.FC<PaginationSectionProps> = ({
             <PaginationItem key={pageNumber}>
               <PaginationLink
                 onClick={() => onPageChange(pageNumber as number)}
-                className={`hover:cursor-pointer ${currentPage === pageNumber ? "bg-green-600 font-semibold text-white hover:bg-green-700 hover:text-white dark:bg-green-500 dark:hover:bg-green-600" : "hover:bg-muted"}`}
+                className={`hover:cursor-pointer ${
+                  currentPage === pageNumber
+                    ? "bg-green-600 font-semibold text-white hover:bg-green-700 hover:text-white dark:bg-green-500 dark:hover:bg-green-600"
+                    : "hover:bg-muted"
+                }`}
                 aria-current={currentPage === pageNumber ? "page" : undefined}
               >
                 {pageNumber}
@@ -97,7 +107,9 @@ const PaginationSection: React.FC<PaginationSectionProps> = ({
         <PaginationItem>
           <PaginationNext
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-            className={`hover:cursor-pointer ${currentPage === totalPages ? "pointer-events-none opacity-50" : ""}`}
+            className={`hover:cursor-pointer ${
+              currentPage === totalPages ? "pointer-events-none opacity-50" : ""
+            }`}
             aria-disabled={currentPage === totalPages}
           >
             <span className="mr-2 hidden sm:inline">Next</span>

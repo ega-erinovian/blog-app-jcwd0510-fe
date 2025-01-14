@@ -31,7 +31,7 @@ const BlogList = () => {
   };
 
   return (
-    <>
+    <div className="py-12">
       <SearchInput onSearch={onSearch} />
       {isPending && <BlogCardSkeleton />}
 
@@ -50,12 +50,15 @@ const BlogList = () => {
           </div>
         </>
       )}
-      <PaginationSection
-        onPageChange={onChangePage}
-        currentPage={page}
-        totalPages={data?.meta.total || 1}
-      />
-    </>
+      {!!data?.data.length && !isPending && (
+        <PaginationSection
+          onPageChange={onChangePage}
+          currentPage={page}
+          itemsPerPage={data?.meta.take || 0}
+          totalItems={data?.meta.total || 0}
+        />
+      )}
+    </div>
   );
 };
 

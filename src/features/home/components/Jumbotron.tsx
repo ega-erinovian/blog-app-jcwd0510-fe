@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Jumbotron = () => {
   return (
-    <section className="relative py-20 md:py-36">
+    <section className="relative py-20 md:py-24">
       <div className="bg-grid-slate-100 dark:bg-grid-slate-700/25 absolute inset-0"></div>
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-6 text-center">
